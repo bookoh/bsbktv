@@ -135,31 +135,30 @@
     };
 
     // 제휴 버튼 HTML (버튼 위 쿠팡 고지 문구 포함)
-    function affiliateButtonsHtml(spot, slotType) {
-      if (!spot.affiliate_buttons || !spot.affiliate_buttons.length) return '';
-      const filtered = slotType
-        ? spot.affiliate_buttons.filter(b => (b.slot_type || 'writer') === slotType)
-        : spot.affiliate_buttons;
+    function affiliateCTASectionHTML(spot, slotType) {
+  if (!spot.affiliate_buttons || !spot.affiliate_buttons.length) return '';
 
-      if (!filtered.length) return '';
+  const filtered_buttons = spot.affiliate_buttons.filter(
+    b => b.slot_type === 'writer' || b.slot_type === slotType
+  );
+  if (!filtered_buttons.length) return '';
 
-      return `
-        <div class="mt-2 px-4 pb-4 space-y-2">
-          <p class="text-[10px] text-gray-500 text-center">
-            이 링크를 통해 구매 시, 쿠팡 파트너스 활동으로 일정액의 수수료를 제공받습니다.
-          </p>
-          ${filtered.map(btn => `
-            <button
-              class="w-full flex items-center justify-center gap-2 rounded-full py-2 text-xs font-semibold
-                     bg-gradient-to-r from-orange-500 to-blue-600 hover:brightness-110 transition"
-              onclick="handleAffiliateClick(${btn.id}, '${btn.url.replace(/'/g,"\\'")}', '${btn.provider}')"
-            >
-              ${btn.logo_url ? `<img src="${btn.logo_url}" class="h-4 w-4 object-contain" alt="">` : ''}
-              <span>${btn.label}</span>
-            </button>
-          `).join('')}
-        </div>
-      `;
+  const affiliate_buttons = filtered_buttons;
+  const provider = affiliate_buttons[0]?.provider || 'coupang';
+  const disclosure =
+    provider === 'oliveyoung'
+      ? '해당 링크는 올리브영 큐레이터 추천 링크로, 구매 시 일정 보상이 제공될 수 있습니다.'
+      : '이 링크를 통해 구매 시, 작성 파트너스님은 일정액의 수수료를 제공받습니다.';
+
+  return `
+    <div class="...">
+      ...
+      <p class="text-[11px] text-gray-500 mt-2">
+        ${disclosure}
+      </p>
+      ...
+    </div>
+  `;
     }
 
     // 카드 HTML
