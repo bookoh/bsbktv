@@ -127,7 +127,20 @@
       { key:'ai-video',  label:'AI 영상',  spotTypes:['AI/콘텐츠'] },
       { key:'threads',   label:'스레드 추천 유튜버', spotTypes:['스레드 추천 유튜버'] }
     ];
+    
+async function loadChzzkStreams() {
+  const { data, error } = await db
+    .from('chzzk_streams')
+    .select('id, live_url, spot_id, spots(*)');
 
+  if (error) {
+    console.error('loadChzzkStreams error', error);
+    return;
+  }
+
+  console.log('chzzk_streams', data);
+}
+    
     // 섹션별 광고 슬롯 타입
     const SLOT_TYPES_BY_CATEGORY = {
       writer: 'writer',   // 작가 섹션
@@ -471,7 +484,9 @@ async function loadPartners() {
           오늘 하루, 당신의 시간을 써볼 만한 영상과 이야기만 엄선해서 내보냅니다.
         </p>
       </div>
-
+      
+loadChzzkStreams();
+      
       <nav class="space-y-4 text-lg">
         <a href="#top10" onclick="toggleMobileMenu(false)" class="block text-white font-semibold">
           🎬 BSBKTV TOP 10
